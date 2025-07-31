@@ -6,8 +6,6 @@ import dao.CustomerDao;
 import dao.MerchantDao;
 
 import models.*;
-import models.enumeration.CompteType;
-
 import java.util.Scanner;
 
 public class LoginService {
@@ -16,6 +14,13 @@ public class LoginService {
     private final AdminDao adminDao = new AdminDao();
     private final CustomerDao customerDao = new CustomerDao();
     private final MerchantDao merchantDao = new MerchantDao();
+
+    private final MenuAdminService menuAdminService;
+
+    // ✅ Injection du service dans le constructeur
+    public LoginService(MenuAdminService menuAdminService) {
+        this.menuAdminService = menuAdminService;
+    }
 
     public void login(Scanner scanner) {
         System.out.print("Login : ");
@@ -41,6 +46,9 @@ public class LoginService {
                 admin.setUserAccount(userAccount);
                 adminDao.selectAdmin(admin);
                 System.out.println("Bienvenue ADMIN : " + admin.getFirstName());
+
+                // ✅ Appel direct du menu admin
+                menuAdminService.afficherMenuAdmin(scanner);
             }
             case CUSTOMER -> {
                 Customer customer = new Customer();

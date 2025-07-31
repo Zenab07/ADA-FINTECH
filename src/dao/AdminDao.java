@@ -119,7 +119,7 @@ public class AdminDao {
                 admin.setUserAccount(userA);
 
 
-                admin.setPrivileges(Arrays.stream(rs.getString("privilege").split(";"))
+                admin.setPrivileges(Arrays.stream(rs.getString("privileges").split(";"))
                         .map(models.enumeration.Privileges::valueOf)
                         .collect(java.util.stream.Collectors.toList()));
                 System.out.println(admin.afficherUser());

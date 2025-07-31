@@ -133,5 +133,8 @@ public class MerchantDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+
+
     }
 }

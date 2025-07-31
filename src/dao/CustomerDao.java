@@ -2,6 +2,11 @@ package dao;
 
 import models.enumeration.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+
 import java.sql.*;
 
 import models.Customer;
@@ -182,4 +187,53 @@ public class CustomerDao {
         }
 
     }
+
+
+
+    public List<Customer> selectAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
+
+        // ✅ Requête SQL avec jointures
+        String ALL_CUSTOMER = "SELECT c.id AS customer_id, c.firstname, c.lastname, " +
+                "ua.id AS useraccount_id, ua.login, " +
+                "w.id AS wallet_id, w.balance " +
+                "FROM Customer c " +
+                "JOIN Useraccount ua ON c.useraccount_id = ua.id " +
+                "JOIN Wallet w ON w.user_id = c.id";
+
+        try (
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/MY_DB", "root", "admin");
+                PreparedStatement statement = connection.prepareStatement(ALL_CUSTOMER);
+                ResultSet rs = statement.executeQuery()
+        ) {
+            while (rs.next()) {
+                // Création de l'objet Customer
+                Customer customer = new Customer();
+                customer.setId(rs.getLong("customer_id"));
+                customer.setFirstName(rs.getString("first_name"));
+                customer.setLastName(rs.getString("last_name"));
+
+                // Création de l'objet UserAccount associé
+                UserAccount userAccount = new UserAccount();
+                userAccount.setId(rs.getLong("user_account_id"));
+                userAccount.setLogin(rs.getString("login"));
+                customer.setUserAccount(userAccount);
+
+                // Création de l'objet Wallet associé
+                Wallet wallet = new Wallet();
+                wallet.setId(rs.getLong("wallet_id"));
+                wallet.setBalance(rs.getBigDecimal("balance") != null ? rs.getBigDecimal("balance") : BigDecimal.ZERO);
+                customer.setWallet(wallet);
+
+                // Ajout à la liste
+                customers.add(customer);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customers;
+    }
+
 }
