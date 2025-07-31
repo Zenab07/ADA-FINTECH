@@ -80,7 +80,7 @@ public class CustomerDao {
                         long id = rs.getLong(1);
                         customer.setId(id);
                     } else {
-                        System.out.println("⚠️ Échec de la récupération de l'ID généré.");
+                        System.out.println("Échec de la récupération de l'ID généré.");
                     }
                 }
             }

@@ -28,6 +28,7 @@ public class AdminDao {
         }
     }*/
     public Admin createAdmin(Admin admin){
+
         try(Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/MY_DB", "root", "admin")) {
             PreparedStatement statement = connection.prepareStatement(INSERT);
             statement.setString(1, admin.getLastName());
